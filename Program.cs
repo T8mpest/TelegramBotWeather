@@ -49,7 +49,7 @@ namespace TelegramBotWeather
 
             if (message.Text == "/start")
             {
-               // await bot.SendStickerAsync(update.Message.Chat.Id, InputFile.FromString("https://imgur.com/TtZMndX"), allowSendingWithoutReply: true, cancellationToken: ct);
+                 await bot.SendStickerAsync(update.Message.Chat.Id, sticker: InputFile.FromUri("https://raw.githubusercontent.com/T8mpest/TelegramBotWeather/main/stickers/sticker.webp"), allowSendingWithoutReply: true, cancellationToken: ct);
             }
             else if (message.Text.StartsWith("/temperature"))
             {
@@ -58,7 +58,7 @@ namespace TelegramBotWeather
 
                 if (weatherInfo != null)
                 {
-                    var response = $"Температура в городе {city}: {weatherInfo.Main.Temp}°C";
+                    var response = $"Температура в городе Днепр {city}: {weatherInfo.Main.Temp}°C";
                     await bot.SendTextMessageAsync(message.Chat.Id, response);
                 }
                 else
@@ -91,6 +91,7 @@ namespace TelegramBotWeather
     
         private static async Task<WeatherResponse> GetWeatherInfoByLocation(double latitude, double longitude)
         {
+            Console.WriteLine($"{latitude}, {longitude}");
             var url = $"http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid=ca085266e256c19f8ad8a74dbcfe86e2&units=metric";
 
             try
