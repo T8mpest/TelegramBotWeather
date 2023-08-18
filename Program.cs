@@ -34,6 +34,7 @@ namespace TelegramBotWeather
             botClient.StartReceiving(HandleUpdateAsync, HandlePollingErrorAsync, receiverOptions, cts.Token);
 
             Console.WriteLine($"Start listening for @{me.Username}");
+
             Console.ReadLine();
             cts.Cancel();
         }
@@ -91,7 +92,7 @@ namespace TelegramBotWeather
     
         private static async Task<WeatherResponse> GetWeatherInfoByLocation(double latitude, double longitude)
         {
-            Console.WriteLine($"{latitude}, {longitude}");
+            
             var url = $"http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid=ca085266e256c19f8ad8a74dbcfe86e2&units=metric";
 
             try
