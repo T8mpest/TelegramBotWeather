@@ -82,7 +82,7 @@ namespace TelegramBotWeather
                     {
                         await bot.SendTextMessageAsync(message.Chat.Id, "Извините, не удалось получить данные о погоде.");
                     }
-                }
+                }   
                 else
                 {
                     await bot.SendTextMessageAsync(message.Chat.Id, "Для получения температуры укажите свою геолокацию.");
