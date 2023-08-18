@@ -49,7 +49,7 @@ namespace TelegramBotWeather
 
             if (message.Text == "/start")
             {
-                await DisplayCommandsKeyboard(bot, message.Chat.Id);
+               // await bot.SendStickerAsync(update.Message.Chat.Id, InputFile.FromString("https://imgur.com/TtZMndX"), allowSendingWithoutReply: true, cancellationToken: ct);
             }
             else if (message.Text.StartsWith("/temperature"))
             {
@@ -66,12 +66,53 @@ namespace TelegramBotWeather
                     await bot.SendTextMessageAsync(message.Chat.Id, "Извините, не удалось получить данные о погоде.");
                 }
             }
+            else if (message.Text.StartsWith("/mytemperature"))
+            {
+                if (message.Location != null)
+                {
+                    var weatherInfo = await GetWeatherInfoByLocation(message.Location.Latitude, message.Location.Longitude);
+
+                    if (weatherInfo != null)
+                    {
+                        var response = $"Текущая температура у вас: {weatherInfo.Main.Temp}°C";
+                        await bot.SendTextMessageAsync(message.Chat.Id, response);
+                    }
+                    else
+                    {
+                        await bot.SendTextMessageAsync(message.Chat.Id, "Извините, не удалось получить данные о погоде.");
+                    }
+                }
+                else
+                {
+                    await bot.SendTextMessageAsync(message.Chat.Id, "Для получения температуры укажите свою геолокацию.");
+                }
+            }
         }
-        private static async Task DisplayCommandsKeyboard(ITelegramBotClient bot, long chatId)
+    
+        private static async Task<WeatherResponse> GetWeatherInfoByLocation(double latitude, double longitude)
         {
-            var keyboard = KeyboardHelper.GetCommandsKeyboard();
-            var message = "Выберите команду:";
-            await bot.SendTextMessageAsync(chatId, message, replyMarkup: keyboard);
+            var url = $"http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid=ca085266e256c19f8ad8a74dbcfe86e2&units=metric";
+
+            try
+            {
+                using var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<WeatherResponse>(responseContent);
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to fetch weather data. Status code: {response.StatusCode}");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while fetching weather data: {ex.Message}");
+                return null;
+            }
         }
         private static async Task<WeatherResponse> GetWeatherInfo(string city)
         {
