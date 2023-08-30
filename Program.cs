@@ -93,7 +93,7 @@ namespace TelegramBotWeather
                 else
                 {
                     await bot.SendTextMessageAsync(message.Chat.Id, "Извините, но идите вы нахуй с такими запросами далбоебы блять!❤️");
-                    await bot.SendStickerAsync(update.Message.Chat.Id, sticker: InputFile.FromUri("https://raw.githubusercontent.com/T8mpest/TelegramBotWeather/main/stickers/sticker.webp"), allowSendingWithoutReply: true, cancellationToken: ct);
+                    await bot.SendStickerAsync(update.Message.Chat.Id, sticker: InputFile.FromString("https://raw.githubusercontent.com/T8mpest/TelegramBotWeather/main/stickers/sticker.webp"), allowSendingWithoutReply: true, cancellationToken: ct);
                 }
             }
 
